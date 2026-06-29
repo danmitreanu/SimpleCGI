@@ -1,0 +1,7 @@
+{
+    "exe": "python3",
+    "arguments": [
+        "-c",
+        "print('STATUS 200');print('TYPE text/plain');print('');print('test')"
+    ]
+}

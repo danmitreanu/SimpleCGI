@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="SimpleCGI.Types/SimpleCGI.Types.csproj" />
+  <Project Path="SimpleCGI.WebServer/SimpleCGI.WebServer.csproj" />
+</Solution>
