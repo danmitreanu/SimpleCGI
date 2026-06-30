@@ -3,10 +3,15 @@ using System.Text.Json.Serialization;
 
 namespace SimpleCGI.WebServer;
 
+[JsonSourceGenerationOptions(
+    PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
+    UseStringEnumConverter = true)]
+[JsonSerializable(typeof(Sitemap.Index))]
+[JsonSerializable(typeof(Sitemap.IndexFile))]
+internal partial class SitemapJsonContext : JsonSerializerContext { }
+
 public class Sitemap
 {
-    private static readonly JsonSerializerOptions s_jsonOpts;
-
     public record IndexFile
     {
         public string? Path { get; set; }
@@ -26,15 +31,6 @@ public class Sitemap
         File = new IndexFile()
     };
 
-    static Sitemap()
-    {
-        s_jsonOpts = new JsonSerializerOptions
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-        };
-        s_jsonOpts.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase, allowIntegerValues: true));
-    }
-
     public string LocalDirectory { get; set; } = string.Empty;
     public Index Root { get; set; } = DefaultRoot;
     public Dictionary<string, Sitemap> Paths { get; set; } = [];
@@ -51,7 +47,7 @@ public class Sitemap
         if (File.Exists(indexJsonPath))
         {
             string indexJson = File.ReadAllText(indexJsonPath);
-            var index = JsonSerializer.Deserialize<Index>(indexJson, s_jsonOpts) ??
+            var index = JsonSerializer.Deserialize(indexJson, SitemapJsonContext.Default.Index) ??
                 throw new Exception($"{indexJsonPath} cannot be null");
 
             sitemap.Root = index;
