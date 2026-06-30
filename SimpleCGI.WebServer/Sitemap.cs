@@ -43,7 +43,7 @@ public class Sitemap
             LocalDirectory = di.FullName
         };
 
-        string indexJsonPath = Path.Combine(di.FullName, "index.json");
+        string indexJsonPath = Path.Combine(di.FullName, "_simple.json");
         if (File.Exists(indexJsonPath))
         {
             string indexJson = File.ReadAllText(indexJsonPath);
