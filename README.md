@@ -208,3 +208,9 @@ HEADER Location https://example.com
 ```
 
 If you write a common library for some language, you are now in a contractual obligation to submit a PR by reading this very text. Thanks.
+
+## Production???
+
+I wouldn't expose this stuff to the public internet, I don't feel confortable with `HttpListener` facing publicly. But someone WILL do it, no doubt.
+
+Just serve it from behind NGINX via reverse proxy or something. Even if you Cloudflare into it, still run it behind NGINX. Be wise.
