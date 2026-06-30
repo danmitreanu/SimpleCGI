@@ -14,8 +14,8 @@ public static class TypesExtensions
             {
                 RequestId = id ?? Guid.NewGuid().ToString(),
                 Method = request.HttpMethod.ToUpperInvariant(),
-                AbsolutePath = request.RawUrl ?? "/",
-                Path = request.RawUrl  ?? "/",
+                AbsolutePath = request.Url?.AbsolutePath ?? "/",
+                Path = request.Url?.AbsolutePath ?? "/",
                 QueryString = request.Url?.Query ?? "?",
                 Query = ParseQueryString(request.Url?.Query.ToString())
             };
@@ -28,9 +28,6 @@ public static class TypesExtensions
                 var values = (request.Headers.GetValues(headerName) ?? []).ToList();
                 req.Headers.Add(headerName, values);
             }
-
-            foreach (var (cookieName, cookieValue) in req.Cookies)
-                req.Cookies.Add(cookieName, cookieValue);
 
             req.ContentLength = request.ContentLength64;
 

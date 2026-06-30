@@ -3,7 +3,6 @@ import json
 
 query = {}
 headers = {}
-cookies = {}
 
 while True:
     data = input()
@@ -25,16 +24,22 @@ while True:
         case "QUERY":
             query[toks[1]] = " ".join(toks[2:])
         case "HEADER":
-            headers[toks[1]] = " ".join(toks[2:])
+            header_name = toks[1]
+            header_value = " ".join(toks[2:])
+            if not header_name in headers:
+                headers[header_name] = [header_value]
+            else:
+                headers[header_name].append(header_value)
 
 print("STATUS 200")
 print("TYPE application/json")
+print("COOKIE session 103")
+print("COOKIE session2 104")
 print()
 
 body = json.dumps({
     "query": query,
     "headers": headers,
-    "cookies": cookies,
     "req_id": req_id,
     "method": method,
     "abs_path": abs_path,

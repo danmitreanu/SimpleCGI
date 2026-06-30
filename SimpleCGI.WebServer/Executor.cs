@@ -137,11 +137,6 @@ public class Executor
                 sb.Append("HEADER ").Append(name).Append(' ').AppendLine(val);
         }
 
-        foreach (var (name, val) in req.Cookies)
-        {
-            sb.Append("COOKIE ").Append(name).Append(' ').AppendLine(val);
-        }
-
         sb.Append("LEN ").AppendLine(req.ContentLength.ToString());
 
         using (StreamWriter writer = new(dest, leaveOpen: true))

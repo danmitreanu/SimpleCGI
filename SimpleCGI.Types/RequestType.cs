@@ -9,7 +9,6 @@ public record RequestType
     public string QueryString { get; set; } = string.Empty;
     public Dictionary<string, string> Query { get; set; } = [];
     public Dictionary<string, List<string>> Headers { get; set; } = [];
-    public Dictionary<string, string> Cookies { get; set; } = [];
     public long ContentLength { get; set; } = 0;
     public Stream? Body { get; set; }
 }
