@@ -212,7 +212,7 @@ public class Executor
                         string cookieName = words[1];
                         string path = words[2];
                         string domain = words[3];
-                        Cookie cookie = new(cookieName, string.Join(' ', words[3..]), path, domain);
+                        Cookie cookie = new(cookieName, string.Join(' ', words[4..]), path, domain);
                         res.Cookies.Add(cookie);
                         break;
                     }
