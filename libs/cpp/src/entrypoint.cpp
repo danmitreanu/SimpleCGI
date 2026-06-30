@@ -11,4 +11,5 @@ void simple_cgi_main()
 
 	simple_cgi_handle(request, response);
 	response.send(std::cout);
+	std::cout.flush();
 }
