@@ -45,6 +45,8 @@ public class Executor
         try
         {
             process.Start();
+            process.ErrorDataReceived += (_, e) => Console.WriteLine(e.Data);
+            process.BeginErrorReadLine();
 
             var stdin = process.StandardInput.BaseStream;
             var stdout = process.StandardOutput.BaseStream;
@@ -231,7 +233,9 @@ public class Executor
         char lastChar = '\n';
         while (stream.CanRead)
         {
-            byte b = (byte)stream.ReadByte();
+            int read = stream.ReadByte();
+            if (read == -1) break;
+            byte b = (byte)read;
             char c = (char)b;
 
             if (c == '\r')

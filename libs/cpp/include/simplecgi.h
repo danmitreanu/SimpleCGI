@@ -9,6 +9,7 @@
 #define SIMPLE_CGI_IMPLEMENT()						\
 int main(int argc, const char* const* const argv) { \
 	simple_cgi_main();								\
+	return 0;										\
 }
 
 struct simple_cgi_request

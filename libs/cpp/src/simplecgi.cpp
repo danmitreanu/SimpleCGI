@@ -63,8 +63,12 @@ simple_cgi_request simple_cgi_parse_request(std::istream& in)
 {
 	simple_cgi_request request;
 	std::string line;
-	while (std::getline(in, line) && !line.empty())
+	while (std::getline(in, line))
 	{
+		if (!line.empty() && line.back() == '\r')
+			line.pop_back();
+		if (line.empty())
+			break;
 		std::istringstream is(line);
 		std::string tok;
 		is >> tok;
