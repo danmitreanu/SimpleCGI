@@ -56,6 +56,8 @@ public class Router(Sitemap sitemap)
         }
         else if (!string.IsNullOrEmpty(lastMap.Root.Exe))
         {
+            FileInfo exeFile = new(lastMap.Root.Exe);
+            string exePath = exeFile.Exists ? exeFile.FullName : lastMap.Root.Exe;
             return new ExeResult(lastMap.Root.Exe, lastMap.Root.Arguments, lastMap.LocalDirectory);
         }
         else
