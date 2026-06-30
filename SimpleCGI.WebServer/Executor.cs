@@ -53,6 +53,8 @@ public class Executor
             using var cts = CancellationTokenSource.CreateLinkedTokenSource(processCts.Token, ct);
 
             await WriteRequest(stdin, request, cts.Token);
+            stdin.Close();
+
             var response = await ReadResponse(stdout, request, cts.Token);
 
             httpRes.StatusCode = response.StatusCode;

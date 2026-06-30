@@ -1,0 +1,12 @@
+#include <simplecgi.h>
+
+SIMPLE_CGI_IMPLEMENT()
+
+void simple_cgi_handle(const simple_cgi_request& request, simple_cgi_response& response)
+{
+	std::string body = request.body_read_string();
+
+	response.status_code = 301;
+	response.headers["Location"].push_back("https://www.google.com");
+}
+

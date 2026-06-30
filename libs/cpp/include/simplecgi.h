@@ -6,7 +6,7 @@
 #include <vector>
 #include <functional>
 
-#define SIMPLE_CGI_IMPLEMENT						\
+#define SIMPLE_CGI_IMPLEMENT()						\
 int main(int argc, const char* const* const argv) { \
 	simple_cgi_main();								\
 }
@@ -23,7 +23,8 @@ struct simple_cgi_request
 
 	std::istream* body_stream{ nullptr };
 
-	std::istream& body();
+	std::istream& body() const;
+	std::string body_read_string() const;
 };
 
 struct simple_cgi_response
@@ -61,5 +62,7 @@ struct simple_cgi_response_stream : simple_cgi_response
 
 void simple_cgi_main();
 simple_cgi_request simple_cgi_parse_request(std::istream& in);
-simple_cgi_response simple_cgi_handle(const simple_cgi_request& request);
+
+// Implement this in your program after SIMPLE_CGI_IMPLEMENT()
+void simple_cgi_handle(const simple_cgi_request& request, simple_cgi_response& response);
 

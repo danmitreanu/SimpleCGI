@@ -7,3 +7,6 @@ file(GLOB CGI_EXE_INC_FILES "${CGI_EXE_ROOT}/include/*.h")
 
 add_library(cgi_exe STATIC ${CGI_EXE_INC_FILES} ${CGI_EXE_SRC_FILES})
 target_include_directories(cgi_exe PUBLIC "${CGI_EXE_ROOT}/include")
+
+add_executable(cgi_exe_test "${CGI_EXE_ROOT}/test/test1.cpp")
+target_link_libraries(cgi_exe_test PUBLIC cgi_exe)

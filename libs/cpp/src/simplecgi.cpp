@@ -1,8 +1,13 @@
 #include <simplecgi.h>
 
-std::istream& simple_cgi_request::body()
+std::istream& simple_cgi_request::body() const
 {
 	return *body_stream;
+}
+
+std::string simple_cgi_request::body_read_string() const
+{
+	return std::string(std::istreambuf_iterator<char>(body()), {});
 }
 
 void simple_cgi_response::send(std::ostream& out) const
@@ -35,6 +40,9 @@ void simple_cgi_response::send(std::ostream& out) const
 			out << "COOKIE " << cookie.name << " " << cookie.value << '\n';
 		}
 	}
+
+	out << '\n';
+	out.flush();
 }
 
 void simple_cgi_response_string::send(std::ostream& out) const
