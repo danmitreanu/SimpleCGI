@@ -19,8 +19,7 @@ public class Executor
         }
         else
         {
-            Console.Error.WriteLine("Router did not determine any result");
-            await ExecuteError(500, "Internal Server Error", httpRes, ct);
+            await ExecuteError(404, "Not Found", httpRes, ct);
         }
     }
 
@@ -30,6 +29,7 @@ public class Executor
         {
             StartInfo = new ProcessStartInfo
             {
+                WorkingDirectory = exeResult.WorkDir,
                 FileName = exeResult.Exe,
                 UseShellExecute = false,
                 RedirectStandardInput = true,
@@ -48,7 +48,7 @@ public class Executor
             var stdin = process.StandardInput.BaseStream;
             var stdout = process.StandardOutput.BaseStream;
 
-            //await WriteRequest(stdin, request, ct);
+            await WriteRequest(stdin, request, ct);
             var response = await ReadResponse(stdout, request, ct);
 
             httpRes.StatusCode = response.StatusCode;
@@ -104,6 +104,7 @@ public class Executor
             Console.Error.WriteLine(details);
 
         httpRes.StatusCode = statusCode;
+        httpRes.ContentType = "text/html";
         using StreamWriter writer = new(httpRes.OutputStream, leaveOpen: true);
         StringBuilder sb = new();
         sb.Append("<h1>").Append(statusCode).Append("</h1><h2>").Append(reason).Append("</h2>");
@@ -123,29 +124,22 @@ public class Executor
             .Append("PATH ")
             .AppendLine(req.Path)
             .Append("QUERY_S ")
-            .AppendLine(req.QueryString)
-            .Append("QUERY ")
-            .AppendLine(req.Query.Count.ToString());
+            .AppendLine(req.QueryString);
 
         foreach (var (name, val) in req.Query)
         {
-            sb.Append(name).Append(' ').AppendLine(val);
+            sb.Append("QUERY ").Append(name).Append(' ').AppendLine(val);
         }
-
-        sb.Append("HEADERS ").AppendLine(req.Headers.Count.ToString());
 
         foreach (var (name, vals) in req.Headers)
         {
-            sb.Append(name).Append(' ').AppendLine(vals.Count.ToString());
             foreach (string val in vals)
-                sb.AppendLine(val);
+                sb.Append("HEADER ").Append(name).Append(' ').AppendLine(val);
         }
-
-        sb.Append("COOK ").AppendLine(req.Cookies.Count.ToString());
 
         foreach (var (name, val) in req.Cookies)
         {
-            sb.Append(name).Append(' ').AppendLine(val);
+            sb.Append("COOKIE ").Append(name).Append(' ').AppendLine(val);
         }
 
         sb.Append("LEN ").AppendLine(req.ContentLength.ToString());

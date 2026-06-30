@@ -14,10 +14,10 @@ public static class TypesExtensions
             {
                 RequestId = id ?? Guid.NewGuid().ToString(),
                 Method = request.HttpMethod.ToUpperInvariant(),
-                AbsolutePath = request.RawUrl?.ToString() ?? "/",
-                Path = request.RawUrl?.ToString() ?? "/",
-                //QueryString = request.QueryString.ToString() ?? string.Empty,
-                //Query = ParseQueryString(request.QueryString.ToString())
+                AbsolutePath = request.RawUrl ?? "/",
+                Path = request.RawUrl  ?? "/",
+                QueryString = request.Url?.Query ?? "?",
+                Query = ParseQueryString(request.Url?.Query.ToString())
             };
 
             foreach (string? headerName in request.Headers.AllKeys)

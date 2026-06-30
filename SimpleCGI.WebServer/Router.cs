@@ -4,7 +4,7 @@ namespace SimpleCGI.WebServer;
 
 public record PageResult;
 public record FileResult(string Path, string? ContentType) : PageResult;
-public record ExeResult(string Exe, string[] Arguments) : PageResult;
+public record ExeResult(string Exe, string[] Arguments, string WorkDir) : PageResult;
 
 public class Router(Sitemap sitemap)
 {
@@ -40,7 +40,7 @@ public class Router(Sitemap sitemap)
                 }
                 else if (!string.IsNullOrEmpty(root.Exe) && root.ForwardPaths)
                 {
-                    return new ExeResult(root.Exe, root.Arguments);
+                    return new ExeResult(root.Exe, root.Arguments, lastMap.LocalDirectory);
                 }
                 else
                 {
@@ -49,13 +49,14 @@ public class Router(Sitemap sitemap)
             }
         }
 
+        request.Path = "/";
         if (lastMap.Root.File?.Path is not null)
         {
             return new FileResult(lastMap.Root.File.Path, lastMap.Root.File.ContentType);
         }
         else if (!string.IsNullOrEmpty(lastMap.Root.Exe))
         {
-            return new ExeResult(lastMap.Root.Exe, lastMap.Root.Arguments);
+            return new ExeResult(lastMap.Root.Exe, lastMap.Root.Arguments, lastMap.LocalDirectory);
         }
         else
         {

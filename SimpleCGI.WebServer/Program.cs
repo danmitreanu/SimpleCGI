@@ -44,6 +44,7 @@ while (!ct.IsCancellationRequested)
         }
         finally
         {
+            ctx.Response.Headers["server"] = "SimpleCGI";
             ctx.Response.Close();
         }
     }

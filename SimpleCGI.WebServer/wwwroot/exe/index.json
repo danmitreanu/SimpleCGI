@@ -1,0 +1,6 @@
+{
+    "exe": "python3",
+    "arguments": [
+        "test.py"
+    ]
+}
