@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using SimpleCGI.Types;
 
@@ -48,8 +49,11 @@ public class Executor
             var stdin = process.StandardInput.BaseStream;
             var stdout = process.StandardOutput.BaseStream;
 
-            await WriteRequest(stdin, request, ct);
-            var response = await ReadResponse(stdout, request, ct);
+            using CancellationTokenSource processCts = new(TimeSpan.FromSeconds(5));
+            using var cts = CancellationTokenSource.CreateLinkedTokenSource(processCts.Token, ct);
+
+            await WriteRequest(stdin, request, cts.Token);
+            var response = await ReadResponse(stdout, request, cts.Token);
 
             httpRes.StatusCode = response.StatusCode;
             httpRes.ContentType = response.ContentType;
@@ -64,8 +68,8 @@ public class Executor
                 httpRes.AppendCookie(cookie);
             }
 
-            await stdout.CopyToAsync(httpRes.OutputStream, ct);
-            await process.WaitForExitAsync(ct);
+            await stdout.CopyToAsync(httpRes.OutputStream, cts.Token);
+            await process.WaitForExitAsync(cts.Token);
         }
         catch (Exception ex)
         {
@@ -250,6 +254,7 @@ public class Executor
             ".json" => "application/json",
             ".png" => "image/png",
             ".jpeg" => "image/jpeg",
+            ".jpg" => "image/jpeg",
             ".xml" => "application/xml",
             ".txt" => "text/plain",
             _ => "application/octet-stream"

@@ -52,7 +52,7 @@ public class Router(Sitemap sitemap)
         request.Path = "/";
         if (lastMap.Root.File?.Path is not null)
         {
-            return new FileResult(lastMap.Root.File.Path, lastMap.Root.File.ContentType);
+            return new FileResult(Path.Combine(lastMap.LocalDirectory, lastMap.Root.File.Path), lastMap.Root.File.ContentType);
         }
         else if (!string.IsNullOrEmpty(lastMap.Root.Exe))
         {

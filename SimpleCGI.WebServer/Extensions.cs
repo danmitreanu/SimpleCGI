@@ -13,7 +13,7 @@ public static class TypesExtensions
             RequestType req = new()
             {
                 RequestId = id ?? Guid.NewGuid().ToString(),
-                Method = request.HttpMethod.ToUpperInvariant(),
+                Method = request.HttpMethod.ToLowerInvariant(),
                 AbsolutePath = request.Url?.AbsolutePath ?? "/",
                 Path = request.Url?.AbsolutePath ?? "/",
                 QueryString = request.Url?.Query ?? "?",

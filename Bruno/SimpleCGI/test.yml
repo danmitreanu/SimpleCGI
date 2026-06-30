@@ -5,7 +5,7 @@ info:
 
 http:
   method: GET
-  url: http://localhost:8080/exe
+  url: http://localhost:8080/testdir2
   auth: inherit
 
 settings:

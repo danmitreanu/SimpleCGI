@@ -31,6 +31,7 @@ while True:
             else:
                 headers[header_name].append(header_value)
 
+print(f"REQ_ID {req_id}")
 print("STATUS 200")
 print("TYPE application/json")
 print("COOKIE session 103")
