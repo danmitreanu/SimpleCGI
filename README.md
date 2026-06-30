@@ -196,7 +196,7 @@ Note the empty line.
 Your executable will **VERY KINDLY** write back something like the following to standard out:
 
 ```
-REQI_ID now_you_care_give_it_back
+REQ_ID now_you_care_give_it_back
 STATUS 301
 TYPE text/html
 COOKIE session cookie_value
