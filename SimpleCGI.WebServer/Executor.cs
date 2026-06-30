@@ -165,7 +165,7 @@ public class Executor
             RequestId = request.RequestId
         };
 
-        using var headerStream = ReadHeaderStream(src);
+        using var headerStream = await ReadHeaderStream(src, ct);
         using (StreamReader streamReader = new(headerStream, Encoding.ASCII, leaveOpen: true))
         {
             string? line;
@@ -227,15 +227,16 @@ public class Executor
         return res;
     }
 
-    private static MemoryStream ReadHeaderStream(Stream stream)
+    private static async Task<MemoryStream> ReadHeaderStream(Stream stream, CancellationToken ct)
     {
+        byte[] buf1 = new byte[1];
+
         MemoryStream memStream = new();
         char lastChar = '\n';
         while (stream.CanRead)
         {
-            int read = stream.ReadByte();
-            if (read == -1) break;
-            byte b = (byte)read;
+            await stream.ReadExactlyAsync(buf1, ct);
+            byte b = buf1[0];
             char c = (char)b;
 
             if (c == '\r')

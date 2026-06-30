@@ -26,17 +26,31 @@ public class Router(Sitemap sitemap)
             else
             {
                 var root = lastMap.Root;
-                string relativePath = string.Join('/', parts[i..]);
+                string relativePath = "/" + string.Join('/', parts[i..]);
                 request.Path = relativePath;
 
-                if (root.File is not null && string.IsNullOrEmpty(root.File.Path))
+                if (root.File is not null)
                 {
-                    string filePath = Path.Combine(lastMap.LocalDirectory, relativePath);
-                    bool exists = File.Exists(filePath);
+                    string filePath = string.IsNullOrEmpty(root.File.Path) ?
+                        lastMap.LocalDirectory :
+                        Path.Combine(lastMap.LocalDirectory, root.File.Path);
 
-                    return exists ?
-                        new FileResult(filePath, root.File.ContentType) :
-                        null;
+                    if (Directory.Exists(filePath))
+                    {
+                        string finalPath = Path.Combine(filePath, relativePath);
+                        bool exists = File.Exists(finalPath);
+                        return exists ?
+                            new FileResult(finalPath, root.File.ContentType) :
+                            null;
+                    }
+                    else if (File.Exists(filePath) && root.ForwardPaths)
+                    {
+                        return new FileResult(filePath, root.File.ContentType);
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
                 else if (!string.IsNullOrEmpty(root.Exe) && root.ForwardPaths)
                 {

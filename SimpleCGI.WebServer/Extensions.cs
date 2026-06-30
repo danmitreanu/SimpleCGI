@@ -52,10 +52,17 @@ public static class TypesExtensions
         foreach (string part in parts)
         {
             int eqidx = part.IndexOf('=');
-            string name = HttpUtility.UrlDecode(part[..eqidx]);
-            string value = HttpUtility.UrlDecode(part[(eqidx + 1)..]);
-
-            values[name] = value;
+            if (eqidx != -1)
+            {
+                string name = HttpUtility.UrlDecode(part[..eqidx]);
+                string value = HttpUtility.UrlDecode(part[(eqidx + 1)..]);
+                values[name] = value;
+            }
+            else
+            {
+                string name = HttpUtility.UrlDecode(part);
+                values[name] = string.Empty;
+            }
         }
 
         return values;
