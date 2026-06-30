@@ -44,19 +44,12 @@ void simple_cgi_response::send(std::ostream& out) const
 	}
 
 	out << '\n';
+	if (body_writer)
+	{
+		body_writer(out);
+	}
+
 	out.flush();
-}
-
-void simple_cgi_response_string::send(std::ostream& out) const
-{
-	simple_cgi_response::send(out);
-	out << body_string;
-}
-
-void simple_cgi_response_stream::send(std::ostream& out) const
-{
-	simple_cgi_response::send(out);
-	body_stream(out);
 }
 
 simple_cgi_request simple_cgi_parse_request(std::istream& in)

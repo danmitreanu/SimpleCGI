@@ -44,21 +44,9 @@ struct simple_cgi_response
 	std::map<std::string, std::vector<std::string>> headers;
 	std::vector<cookie> cookies;
 
+	std::function<void(std::ostream&)> body_writer;
+
 	virtual void send(std::ostream& out) const;
-};
-
-struct simple_cgi_response_string : simple_cgi_response
-{
-	std::string body_string;
-
-	void send(std::ostream& out) const override;
-};
-
-struct simple_cgi_response_stream : simple_cgi_response
-{
-	std::function<void(std::ostream&)> body_stream;
-
-	void send(std::ostream& out) const override;
 };
 
 void simple_cgi_main();
