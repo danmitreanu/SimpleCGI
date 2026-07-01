@@ -45,7 +45,12 @@ public class Executor
         try
         {
             process.Start();
-            process.ErrorDataReceived += (_, e) => Console.WriteLine(e.Data);
+            process.ErrorDataReceived += (_, e) =>
+            {
+                if (!string.IsNullOrWhiteSpace(e.Data))
+                    Console.WriteLine(e.Data);
+            };
+
             process.BeginErrorReadLine();
 
             var stdin = process.StandardInput.BaseStream;

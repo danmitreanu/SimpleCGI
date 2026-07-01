@@ -87,6 +87,7 @@ static async Task Process(Router router, Channel<HttpListenerContext> chan, Canc
             {
                 var request = RequestType.FromHttpRequest(ctx.Request);
                 var routeResult = router.Route(request);
+                Console.WriteLine("Executing {0}", request.AbsolutePath);
                 await Executor.Execute(routeResult, request, ctx.Response, ct);
             }
             catch (OperationCanceledException)
