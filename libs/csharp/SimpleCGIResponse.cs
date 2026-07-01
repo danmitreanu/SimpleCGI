@@ -61,7 +61,7 @@ public class SimpleCGIResponse(SimpleCGIRequest request)
         foreach (var (name, values) in Headers)
         {
             foreach (string value in values)
-                sb.Append(name).Append(' ').AppendLine(value);
+                sb.Append("HEADER ").Append(name).Append(' ').AppendLine(value);
         }
 
         foreach (var cookie in Cookies)
