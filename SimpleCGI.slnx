@@ -1,4 +1,10 @@
 <Solution>
+  <Folder Name="/libs/">
+    <Project Path="libs/csharp_test/csharp_test.csproj" />
+  </Folder>
+  <Folder Name="/libs/csharp/">
+    <Project Path="libs/csharp/SimpleCGI.Client.csproj" />
+  </Folder>
   <Project Path="SimpleCGI.Types/SimpleCGI.Types.csproj" />
   <Project Path="SimpleCGI.WebServer/SimpleCGI.WebServer.csproj" />
 </Solution>

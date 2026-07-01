@@ -1,7 +1,7 @@
 info:
   name: Path serves static file with forwardPaths
   type: http
-  seq: 6
+  seq: 7
 
 http:
   method: GET

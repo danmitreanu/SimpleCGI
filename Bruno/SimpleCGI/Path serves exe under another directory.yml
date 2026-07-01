@@ -1,7 +1,7 @@
 info:
   name: Path serves exe under another directory
   type: http
-  seq: 7
+  seq: 8
 
 http:
   method: GET
