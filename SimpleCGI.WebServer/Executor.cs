@@ -42,6 +42,7 @@ public class Executor
         foreach (string arg in exeResult.Arguments)
             process.StartInfo.ArgumentList.Add(arg);
 
+        bool exited = false;
         try
         {
             process.Start();
@@ -79,10 +80,27 @@ public class Executor
 
             await stdout.CopyToAsync(httpRes.OutputStream, cts.Token);
             await process.WaitForExitAsync(cts.Token);
+            exited = true;
+        }
+        catch (OperationCanceledException)
+        {
+            await ExecuteError(500, "Internal Server Error", "Process timed out", httpRes, ct);
         }
         catch (Exception ex)
         {
             await ExecuteError(500, "Internal Server Error", $"{ex.GetType().Name} {ex.Message}\n{ex.StackTrace}", httpRes, ct);
+        }
+        finally
+        {
+            try
+            {
+                if (!exited)
+                    process.Kill();
+            }
+            catch
+            {
+                Console.Error.WriteLine("Failed to kill process.");
+            }
         }
     }
 
@@ -116,12 +134,19 @@ public class Executor
         if (!string.IsNullOrEmpty(details))
             Console.Error.WriteLine(details);
 
-        httpRes.StatusCode = statusCode;
-        httpRes.ContentType = "text/html";
-        using StreamWriter writer = new(httpRes.OutputStream, leaveOpen: true);
-        StringBuilder sb = new();
-        sb.Append("<h1>").Append(statusCode).Append("</h1><h2>").Append(reason).Append("</h2>");
-        await writer.WriteAsync(sb, ct);
+        try
+        {
+            httpRes.StatusCode = statusCode;
+            httpRes.ContentType = "text/html";
+            using StreamWriter writer = new(httpRes.OutputStream, leaveOpen: true);
+            StringBuilder sb = new();
+            sb.Append("<h1>").Append(statusCode).Append("</h1><h2>").Append(reason).Append("</h2>");
+            await writer.WriteAsync(sb, ct);
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine("Failed to execute error {0}: {1}\n{2}", ex.GetType().Name, ex.Message, ex.StackTrace);
+        }
     }
 
     private static async Task WriteRequest(Stream dest, RequestType req, CancellationToken ct)
